@@ -139,6 +139,13 @@ namespace Quizzing.Web.Migrations
                 name: "IX_Questions_QuizId",
                 table: "Questions",
                 column: "QuizId");
+
+            // Below code is for starting the objects Ids at 100.
+            // Without this code, EF tries to add objects with Ids starting at 1 and crashes with the seeded data for test.
+            // This code needs to be taken out when seeded data is not used
+            migrationBuilder.RestartSequence("Quizzes_QuizId_seq", 100, "public");
+            migrationBuilder.RestartSequence("Questions_QuestionId_seq", 100, "public");
+            migrationBuilder.RestartSequence("Answers_AnswerId_seq", 100, "public");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
