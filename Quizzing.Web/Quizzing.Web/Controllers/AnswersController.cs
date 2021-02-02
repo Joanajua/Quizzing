@@ -66,29 +66,27 @@ namespace Quizzing.Web.Controllers
         //}
 
         // GET: Answers/Create
-        public IActionResult Create(int? id)
+        public IActionResult Create(int? questionId)
         {
-            if (!id.HasValue)
+            if (!questionId.HasValue)
             {
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == id);
+            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == questionId);
 
-            if (answersInQuestion.Count() <= 5)
+            if (answersInQuestion.Count() <= 4)
             {
                 var answer = new Answer
                 {
-                    QuestionId = (int)id,
+                    QuestionId = (int)questionId,
                     AnswerText = ""
                 };
 
                 return View(answer);
             }
 
-            var modelState = new ModelStateDictionary();
-            modelState.AddModelError(string.Empty, "Is not possible to add more than 5 answers for one question.");
-            return RedirectToAction(nameof(Edit), "Questions", id);
+            return RedirectToAction(nameof(Edit), "Questions", new{ id = questionId });
         }
 
         // POST: Answers/Create

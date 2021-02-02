@@ -72,7 +72,7 @@ namespace Quizzing.Web.Controllers
             {
                 _context.Add(quiz);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Create), "Questions", quiz );
+                return RedirectToAction(nameof(Create), "Questions", new {id = quiz.QuizId} );
             }
             return View(quiz);
         }

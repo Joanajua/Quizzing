@@ -1,4 +1,4 @@
-﻿@model Quizzing.Web.Models.Answer
+﻿@model Answer
 
 @{
     string[] leters = new[] { "A", "B", "C", "D", "E" };
@@ -31,7 +31,7 @@
 </div>
 
 <div>
-    <a asp-controller="Questions" asp-action="Edit" asp-route-id="QuestionId">Back to List</a>
+    <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.QuestionId">Back to Question</a>
 </div>
 
 @section Scripts {

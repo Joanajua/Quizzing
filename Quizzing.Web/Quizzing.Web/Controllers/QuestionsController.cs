@@ -63,15 +63,15 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Questions/Create
-        public IActionResult Create(int? quizId)
+        public IActionResult Create(int? id)
         {
-            if (!quizId.HasValue)
+            if (!id.HasValue)
             {
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
             var question = new Question
             {
-                QuizId = (int)quizId,
+                QuizId = (int)id,
                 QuestionText = ""
             };
             return View(question);
