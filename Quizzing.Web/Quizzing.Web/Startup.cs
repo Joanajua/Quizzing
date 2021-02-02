@@ -29,20 +29,13 @@ namespace Quizzing.Web
                 options.UseNpgsql(
                     _configuration.GetConnectionString("AppConnection")));
 
-                services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseNpgsql(
-                    _configuration.GetConnectionString("IdentityConnection")));
-
             services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>();
 
 
             services.AddControllersWithViews();
 
             services.AddScoped<AppDbContext>();
-            services.AddScoped<AppIdentityDbContext>();
-
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
