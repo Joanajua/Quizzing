@@ -1,4 +1,4 @@
-﻿@model Quizzing.Web.Models.Answer
+﻿@model Answer
 
 @{
     ViewData["Title"] = "Delete";
@@ -28,6 +28,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="AnswerId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.QuestionId">Back to Question</a>
     </form>
 </div>

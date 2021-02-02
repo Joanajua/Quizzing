@@ -24,15 +24,22 @@
     {
         @foreach (var answer in Model.Answers)
         {
-            <tr>
-                <td>
-                    @(i++) - @Html.DisplayFor(modelItem => answer.AnswerText)
-                </td>
-                <td>
-                    <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit</a> |
-                    <a asp-controller="Questions" asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @(i++) - @Html.DisplayFor(modelItem => answer.AnswerText)
+            </td>
+            <td>
+                @if (answer.IsCorrect)
+                {
+                    <h6 class="text-info">CORRECT </h6>
+
+                }
+            </td>
+            <td>
+                <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit</a> |
+                <a asp-controller="Questions" asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete</a>
+            </td>
+        </tr>
         }
     }
     else
