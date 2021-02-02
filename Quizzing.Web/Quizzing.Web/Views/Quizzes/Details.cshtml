@@ -1,5 +1,4 @@
-﻿@*@model Quizzing.Web.Models.Quiz*@
-@model DetailsQuizViewModel
+﻿@model DetailsQuizViewModel
 @{int i = 1;}
 
 
@@ -24,9 +23,7 @@
                         @(i++) - @Html.DisplayFor(modelItem => question.QuestionText)
                     </td>
                     <td>
-                        <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">See Answers</a> |
-                        <a asp-controller="Questions" asp-action="Edit" asp-route-id="@question.QuestionId">Edit</a> |
-                        <a asp-controller="Questions" asp-action="Delete" asp-route-id="@question.QuestionId">Delete</a>
+                        <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">See Answers</a>
                     </td>
                 </tr>
             }
@@ -43,9 +40,6 @@
 </table>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Quiz.QuizId">Edit Quiz</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Quiz.QuizId">Delete Quiz</a> |
-
     <a asp-action="Index">Back to List</a>
 </div>
 

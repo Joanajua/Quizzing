@@ -7,6 +7,6 @@ namespace Quizzing.Web.ViewModels.Questions
     {
         public Question Question { get; set; }
 
-        public IEnumerable<Answer> Answers { get; set; }
+        public List<Answer> Answers { get; set; }
     }
 }

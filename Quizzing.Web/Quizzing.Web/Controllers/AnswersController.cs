@@ -106,15 +106,16 @@ namespace Quizzing.Web.Controllers
         // GET: Answers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             var answer = await _context.Answers.FindAsync(id);
+
             if (answer == null)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.NotFoundAnswer);
             }
             return View(answer);
         }
@@ -126,7 +127,7 @@ namespace Quizzing.Web.Controllers
         {
             if (id != answer.AnswerId)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             if (ModelState.IsValid)
@@ -140,16 +141,16 @@ namespace Quizzing.Web.Controllers
                 {
                     if (!AnswerExists(answer.AnswerId))
                     {
-                        return NotFound();
+                        return NotFound(Constants.ErrorMessages.NotFoundAnswer);
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), "Questions",new {id = answer.QuestionId});
             }
-            return View(answer);
+            return View();
         }
 
         // GET: Answers/Delete/5

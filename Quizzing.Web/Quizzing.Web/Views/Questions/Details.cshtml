@@ -1,11 +1,8 @@
 ﻿@model DetailsQuestionViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    string[] leters = new[] {"A", "B", "C", "D", "E"};
 }
-
-@{int i = 1;}
-
 
 @{
     ViewData["Title"] = "Details";
@@ -16,31 +13,27 @@
 
 
 <table class="table">
-    <thead>
-       
-    </thead>
+    <thead></thead>
     <tbody>
     @if (Model.Answers.Any())
     {
-        @foreach (var answer in Model.Answers)
+        @for (int i = 0; i < @Model.Answers.Count(); i++)
         {
-        <tr>
-            <td>
-                @(i++) - @Html.DisplayFor(modelItem => answer.AnswerText)
-            </td>
-            <td>
-                @if (answer.IsCorrect)
-                {
-                    <h6 class="text-info">CORRECT </h6>
-
-                }
-            </td>
-            <td>
-                <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit</a> |
-                <a asp-controller="Questions" asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @(leters[i]) - @Html.DisplayFor(modelItem => Model.Answers[i].AnswerText)
+                </td>
+                <td>
+                    @if (Model.Answers[i].IsCorrect)
+                    {
+                        <h6 class="text-info">CORRECT </h6>
+                    }
+                </td>
+            </tr>
         }
+        
+        
+        
     }
     else
     {
@@ -54,8 +47,7 @@
 </table>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit Question</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete Question</a> |
-
+    @*<a asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit Question</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete Question</a> |*@
     <a asp-controller="Quizzes" asp-action="Details" asp-route-id="@Model.Question.QuizId">Back to Quiz</a>
 </div>

@@ -1,5 +1,10 @@
 ﻿@model EditQuestionViewModel
 
+
+@{
+    string[] leters = new[] { "A", "B", "C", "D", "E" };
+}
+
 @{
     ViewData["Title"] = "Edit Question";
 }
@@ -33,15 +38,22 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var answer in Model.Answers)
+        @for (int i = 0; i < @Model.Answers.Count(); i++)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => answer.AnswerText)
+                        @(leters[i]) - @Html.DisplayFor(modelItem => @Model.Answers[i].AnswerText)
                     </td>
                     <td>
-                        <a asp-controller="Answers" asp-action="Edit" asp-route-id="@answer.AnswerId">Edit</a> |
-                        <a asp-controller="Answers" asp-action="Delete" asp-route-id="@answer.AnswerId">Delete</a>
+                        @if (@Model.Answers[i].IsCorrect)
+                        {
+                            <h6 class="text-info">CORRECT </h6>
+                        }
+                    </td>
+
+                    <td>
+                        <a asp-controller="Answers" asp-action="Edit" asp-route-id="@Model.Answers[i].AnswerId">Edit</a> |
+                        <a asp-controller="Answers" asp-action="Delete" asp-route-id="@Model.Answers[i].AnswerId">Delete</a>
                     </td>
                 </tr>
             }
