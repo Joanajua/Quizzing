@@ -177,7 +177,7 @@ namespace Quizzing.Web.Controllers
             var question = await _context.Questions.FindAsync(id);
             _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Edit), "Quizzes", new {id = question.QuizId});
         }
 
         private bool QuestionExists(int id)
