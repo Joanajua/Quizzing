@@ -66,27 +66,27 @@ namespace Quizzing.Web.Controllers
         //}
 
         // GET: Answers/Create
-        public IActionResult Create(int? questionId)
+        public IActionResult Create(int? id)
         {
-            if (!questionId.HasValue)
+            if (!id.HasValue)
             {
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == questionId);
+            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == id);
 
             if (answersInQuestion.Count() <= 4)
             {
                 var answer = new Answer
                 {
-                    QuestionId = (int)questionId,
+                    QuestionId = (int)id,
                     AnswerText = ""
                 };
 
                 return View(answer);
             }
 
-            return RedirectToAction(nameof(Edit), "Questions", new{ id = questionId });
+            return RedirectToAction(nameof(Edit), "Questions", new{ id = id });
         }
 
         // POST: Answers/Create

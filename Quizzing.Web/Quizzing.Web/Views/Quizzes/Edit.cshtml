@@ -55,6 +55,8 @@ else
 }
 
 <div>
+    <input type="hidden" asp-for="Quiz.QuizId" />
+    <a asp-controller="Questions" asp-action="Create" asp-route-id="@Model.Quiz.QuizId">Add question | </a>
     <a asp-action="Index">Back to List</a>
 </div>
 

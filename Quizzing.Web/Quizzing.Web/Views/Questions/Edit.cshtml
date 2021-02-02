@@ -60,7 +60,7 @@ else
 <div>
     <input type="hidden" asp-for="Question.QuestionId" />
     <a asp-controller="Answers" asp-action="Create" asp-route-id="@Model.Question.QuestionId">Add answer | </a>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Quizzes" asp-action="Edit" asp-route-id="@Model.Question.QuizId">Back to Quiz</a>
 </div>
 
 @section Scripts {
