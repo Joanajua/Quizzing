@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Quizzing.Web.Data;
 using Quizzing.Web.Models;
 
@@ -44,23 +47,37 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Answers/Create
-        public IActionResult Create()
+        public IActionResult Create(Question question)
         {
-            return View();
+            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == question.QuestionId);
+
+            if (answersInQuestion.Count() <= 5)
+            {
+                var answer = new Answer
+                {
+                    QuestionId = question.QuestionId,
+                    AnswerText = ""
+                };
+
+                return View(answer);
+            }
+
+            var modelState = new ModelStateDictionary();
+            modelState.AddModelError(string.Empty, "Is not possible to add more than 5 answers for one question.");
+            return RedirectToAction(nameof(Edit), "Questions", question);
         }
 
         // POST: Answers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AnswerId,QuestionId,AnswerText,IsCorrect")] Answer answer)
+        public async Task<IActionResult> Create([Bind("QuizId,AnswerId,QuestionId,AnswerText,IsCorrect")] Question question, Answer answer)
         {
             if (ModelState.IsValid)
             {
+                var quiz = _context.Quizzes.Select(q => q.Questions.(q=>q.QuestionId == question.QuestionId));
                 _context.Add(answer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit), "Quizzes", question.QuizId);
             }
             return View(answer);
         }

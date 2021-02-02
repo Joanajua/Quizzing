@@ -1,7 +1,7 @@
-﻿@model Quizzing.Web.Models.Question
+﻿@model Question
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create - Question";
 }
 
 <h1>Create</h1>
@@ -13,8 +13,7 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="QuizId" class="control-label"></label>
-                <select asp-for="QuizId" class ="form-control" asp-items="ViewBag.QuizId"></select>
+                <input type="hidden" asp-for="QuizId" />
             </div>
             <div class="form-group">
                 <label asp-for="QuestionText" class="control-label"></label>

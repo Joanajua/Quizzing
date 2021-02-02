@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Quizzing.Web.Data;
 using Quizzing.Web.Models;
+using Quizzing.Web.Utilities.Constants;
+using Quizzing.Web.ViewModels.Quizzes;
 
 namespace Quizzing.Web.Controllers
 {
@@ -28,9 +27,9 @@ namespace Quizzing.Web.Controllers
         // GET: Quizzes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             var quiz = await _context.Quizzes
@@ -40,7 +39,21 @@ namespace Quizzing.Web.Controllers
                 return NotFound();
             }
 
-            return View(quiz);
+            var questions = await _context.Questions
+                .Where(q => q.QuizId == id).ToListAsync();
+
+            if (questions == null)
+            {
+                return NotFound(Constants.ErrorMessages.NotFoundQuestion);
+            }
+
+            var model = new DetailsQuizViewModel
+            {
+                Quiz = quiz,
+                Questions = questions,
+            };
+
+            return View(model);
         }
 
         // GET: Quizzes/Create
@@ -50,8 +63,6 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Quizzes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("QuizId,Title")] Quiz quiz)
@@ -60,7 +71,7 @@ namespace Quizzing.Web.Controllers
             {
                 _context.Add(quiz);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create), "Questions", quiz );
             }
             return View(quiz);
         }
@@ -82,8 +93,6 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Quizzes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("QuizId,Title")] Quiz quiz)

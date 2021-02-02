@@ -1,24 +1,54 @@
-﻿@model Quizzing.Web.Models.Question
+﻿@model DetailsQuestionViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@{int i = 1;}
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Html.DisplayFor(model => model.Question.QuestionText)</h1>
+
+
+
+<table class="table">
+    <thead>
+       
+    </thead>
+    <tbody>
+    @if (Model.Answers.Any())
+    {
+        @foreach (var answer in Model.Answers)
+        {
+            <tr>
+                <td>
+                    @(i++) - @Html.DisplayFor(modelItem => answer.AnswerText)
+                </td>
+                <td>
+                    <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit</a> |
+                    <a asp-controller="Questions" asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <th scope="row">
+                <h4 class="alert-heading alert-info">There are no questions for the requested quiz.</h4>
+            </th>
+        </tr>
+    }
+    </tbody>
+</table>
 
 <div>
-    <h4>Question</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.QuestionText)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.QuestionText)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.QuestionId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit Question</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete Question</a> |
+
+    <a asp-controller="Quizzes" asp-action="Details" asp-route-id="@Model.Question.QuizId">Back to Quiz</a>
 </div>
