@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using Quizzing.Web.Data;
 using Quizzing.Web.Models;
+using Quizzing.Web.Utilities.Constants;
+
 
 namespace Quizzing.Web.Controllers
 {
@@ -23,9 +21,9 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Answers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int questionId)
         {
-            return View(await _context.Answers.ToListAsync());
+            return View(await _context.Answers.Where(a=>a.QuestionId == questionId).ToListAsync());
         }
 
         // GET: Answers/Details/5
@@ -46,16 +44,42 @@ namespace Quizzing.Web.Controllers
             return View(answer);
         }
 
+        //// GET: Answers/Create
+        //public IActionResult Create(Question question)
+        //{
+        //    var answersInQuestion = _context.Answers.Where(a => a.QuestionId == question.QuestionId);
+
+        //    if (answersInQuestion.Count() <= 5)
+        //    {
+        //        var answer = new Answer
+        //        {
+        //            QuestionId = question.QuestionId,
+        //            AnswerText = ""
+        //        };
+
+        //        return View(answer);
+        //    }
+
+        //    var modelState = new ModelStateDictionary();
+        //    modelState.AddModelError(string.Empty, "Is not possible to add more than 5 answers for one question.");
+        //    return RedirectToAction(nameof(Edit), "Questions", question);
+        //}
+
         // GET: Answers/Create
-        public IActionResult Create(Question question)
+        public IActionResult Create(int? id)
         {
-            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == question.QuestionId);
+            if (!id.HasValue)
+            {
+                return BadRequest(Constants.ErrorMessages.BadRequest);
+            }
+
+            var answersInQuestion = _context.Answers.Where(a => a.QuestionId == id);
 
             if (answersInQuestion.Count() <= 5)
             {
                 var answer = new Answer
                 {
-                    QuestionId = question.QuestionId,
+                    QuestionId = (int)id,
                     AnswerText = ""
                 };
 
@@ -64,20 +88,19 @@ namespace Quizzing.Web.Controllers
 
             var modelState = new ModelStateDictionary();
             modelState.AddModelError(string.Empty, "Is not possible to add more than 5 answers for one question.");
-            return RedirectToAction(nameof(Edit), "Questions", question);
+            return RedirectToAction(nameof(Edit), "Questions", id);
         }
 
         // POST: Answers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("QuizId,AnswerId,QuestionId,AnswerText,IsCorrect")] Question question, Answer answer)
+        public async Task<IActionResult> Create([Bind("AnswerId,QuestionId,AnswerText,IsCorrect")] Question question, Answer answer)
         {
             if (ModelState.IsValid)
             {
-                var quiz = _context.Quizzes.Select(q => q.Questions.(q=>q.QuestionId == question.QuestionId));
                 _context.Add(answer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), "Quizzes", question.QuizId);
+                return RedirectToAction(nameof(Edit), "Questions", new { id = question.QuestionId });
             }
             return View(answer);
         }
@@ -99,8 +122,6 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Answers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AnswerId,QuestionId,AnswerText,IsCorrect")] Answer answer)

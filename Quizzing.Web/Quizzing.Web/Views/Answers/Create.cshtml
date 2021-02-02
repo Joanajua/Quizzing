@@ -1,6 +1,9 @@
 ﻿@model Quizzing.Web.Models.Answer
 
 @{
+    string[] leters = new[] { "A", "B", "C", "D", "E" };
+}
+@{
     ViewData["Title"] = "Create - Answer";
 }
 
@@ -28,7 +31,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Questions" asp-action="Edit" asp-route-id="QuestionId">Back to List</a>
 </div>
 
 @section Scripts {

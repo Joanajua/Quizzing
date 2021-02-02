@@ -1,36 +1,65 @@
-﻿@model Quizzing.Web.Models.Question
+﻿@model EditQuestionViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Question";
 }
 
-<h1>Edit</h1>
+<h1>Edit Question</h1>
 
-<h4>Question</h4>
-<hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="QuestionId" />
+            <input type="hidden" asp-for="Question.QuizId" />
+            <input type="hidden" asp-for="Question.QuestionId" />
             <div class="form-group">
-                <label asp-for="QuizId" class="control-label"></label>
-                <select asp-for="QuizId" class="form-control" asp-items="ViewBag.QuizId"></select>
-                <span asp-validation-for="QuizId" class="text-danger"></span>
+                <label asp-for="Question.QuestionText" class="control-label"></label>
+                <input asp-for="Question.QuestionText" class="form-control" />
+                <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="QuestionText" class="control-label"></label>
-                <input asp-for="QuestionText" class="form-control" />
-                <span asp-validation-for="QuestionText" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Update Text" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+@if (Model.Answers.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var answer in Model.Answers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => answer.AnswerText)
+                    </td>
+                    <td>
+                        <a asp-controller="Answers" asp-action="Edit" asp-route-id="@answer.AnswerId">Edit</a> |
+                        <a asp-controller="Answers" asp-action="Delete" asp-route-id="@answer.AnswerId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <tr>
+        <th scope="row">
+            <h4 class="alert-heading alert-info">There are no answers for the requested question.</h4>
+        </th>
+    </tr>
+}
+
 <div>
+    <input type="hidden" asp-for="Question.QuestionId" />
+    <a asp-controller="Answers" asp-action="Create" asp-route-id="@Model.Question.QuestionId">Add answer | </a>
     <a asp-action="Index">Back to List</a>
 </div>
 

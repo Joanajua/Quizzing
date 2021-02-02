@@ -1,29 +1,58 @@
-﻿@model Quizzing.Web.Models.Quiz
+﻿@model EditQuizViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Quiz";
 }
 
-<h1>Edit</h1>
+<h1>Edit Quiz</h1>
 
-<h4>Quiz</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-controller="Quizzes" asp-action="Edit" asp-route-id="@Model.Quiz.QuizId">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="QuizId" />
+            <input type="hidden" asp-for="Quiz.QuizId" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Quiz.Title" class="control-label"></label>
+                <input asp-for="Quiz.Title" class="form-control" required/>
+                <span asp-validation-for="Quiz.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Update title" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+@if (Model.Questions.Any())
+{
+    <table class="table">
+        <thead>
+        <tr>
+        
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var question in Model.Questions) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => question.QuestionText)
+                </td>
+                <td>
+                    <a asp-controller="Questions" asp-action="Edit" asp-route-id="@question.QuestionId">Edit</a> |
+                    <a asp-controller="Questions" asp-action="Delete" asp-route-id="@question.QuestionId">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <tr>
+        <th scope="row">
+            <h4 class="alert-heading alert-info">There are no questions for the requested quiz.</h4>
+        </th>
+    </tr>
+}
 
 <div>
     <a asp-action="Index">Back to List</a>

@@ -63,11 +63,15 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Questions/Create
-        public IActionResult Create(int quizId)
+        public IActionResult Create(int? quizId)
         {
+            if (!quizId.HasValue)
+            {
+                return BadRequest(Constants.ErrorMessages.BadRequest);
+            }
             var question = new Question
             {
-                QuizId = quizId,
+                QuizId = (int)quizId,
                 QuestionText = ""
             };
             return View(question);
@@ -91,29 +95,37 @@ namespace Quizzing.Web.Controllers
         // GET: Questions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             var question = await _context.Questions.FindAsync(id);
+
             if (question == null)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.NotFoundQuestion);
             }
-            return View(question);
+
+            var answers = await _context.Answers.Where(a => a.QuestionId == id).ToListAsync();
+
+            var model = new EditQuestionViewModel
+            {
+                Question = question,
+                Answers = answers
+            };
+
+            return View(model);
         }
 
         // POST: Questions/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("QuestionId,QuizId,QuestionText")] Question question)
         {
             if (id != question.QuestionId)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             if (ModelState.IsValid)
@@ -127,16 +139,16 @@ namespace Quizzing.Web.Controllers
                 {
                     if (!QuestionExists(question.QuestionId))
                     {
-                        return NotFound();
+                        return NotFound(Constants.ErrorMessages.NotFoundQuestion);
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit),new {id = question.QuestionId});
             }
-            return View(question);
+            return View();
         }
 
         // GET: Questions/Delete/5

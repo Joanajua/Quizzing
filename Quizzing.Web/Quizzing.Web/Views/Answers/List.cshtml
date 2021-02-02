@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Answer>
+
+@{
+    string[] leters = new[] { "A", "B", "C", "D", "E" };
+}
+
+@{
+    ViewData["Title"] = "List of answers";
+}
+
+@*<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New Answer</a>
+</p>*@
+<table class="table">
+    <thead>
+        <tr>
+            @*<th>
+                @Html.DisplayNameFor(model => model.AnswerText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCorrect)
+            </th>
+            <th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AnswerText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsCorrect)
+                </td>
+                <td>
+                    <a asp-controller="Answers" asp-action="Edit" asp-route-id="@item.AnswerId">Edit</a> |
+                    <a asp-controller="Answers" asp-action="Details" asp-route-id="@item.AnswerId">Details</a> |
+                    <a asp-controller="Answers" asp-action="Delete" asp-route-id="@item.AnswerId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

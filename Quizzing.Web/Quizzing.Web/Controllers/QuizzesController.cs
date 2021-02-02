@@ -34,9 +34,10 @@ namespace Quizzing.Web.Controllers
 
             var quiz = await _context.Quizzes
                 .FirstOrDefaultAsync(m => m.QuizId == id);
+
             if (quiz == null)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.NotFound);
             }
 
             var questions = await _context.Questions
@@ -79,17 +80,27 @@ namespace Quizzing.Web.Controllers
         // GET: Quizzes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             var quiz = await _context.Quizzes.FindAsync(id);
+
             if (quiz == null)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.NotFound);
             }
-            return View(quiz);
+
+            var questions = await _context.Questions.Where(q => q.QuizId == id).ToListAsync();
+
+            var model = new EditQuizViewModel
+            {
+                Quiz = quiz,
+                Questions = questions
+            };
+
+            return View(model);
         }
 
         // POST: Quizzes/Edit/5
@@ -99,7 +110,7 @@ namespace Quizzing.Web.Controllers
         {
             if (id != quiz.QuizId)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.BadRequest);
             }
 
             if (ModelState.IsValid)
@@ -113,16 +124,16 @@ namespace Quizzing.Web.Controllers
                 {
                     if (!QuizExists(quiz.QuizId))
                     {
-                        return NotFound();
+                        return NotFound(Constants.ErrorMessages.NotFound);
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Edit));
             }
-            return View(quiz);
+            return View();
         }
 
         // GET: Quizzes/Delete/5
