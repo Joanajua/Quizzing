@@ -16,9 +16,9 @@ NUGET PACKAGES NEEDED TO BUILD THE APPLICATION
 
 	○ Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation v3.1.10
 	○ Microsoft.VisualStudio.Web.CodeGeneration.Design  v3.1.4
-	○ Microsoft.EntityFrameworkCore.Design v3.1.10
+	○ Microsoft.EntityFrameworkCore.Design v3.1.11
 
-	○ Microsoft.EntityFrameworkCore.Tools v3.1.10
+	○ Microsoft.EntityFrameworkCore.Tools v3.1.11
 	○ Npgsql.EntityFrameworkCore.PostgreSQL v3.1.1
 	○ Microsoft.EntityFrameworkCore.Sqlite v3.1.10
 	○ Microsoft.EntityFrameworkCore.SqlServer v3.1.10
