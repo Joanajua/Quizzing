@@ -13,13 +13,15 @@ namespace Quizzing.Web.Controllers
     public class QuizzesController : Controller
     {
         private readonly IQuizRepository _quizRepository;
+        private readonly IQuestionRepository _questionRepository;
+
 
         //private readonly AppDbContext _context;
 
-        public QuizzesController(IQuizRepository quizRepository)
+        public QuizzesController(IQuizRepository quizRepository, IQuestionRepository questionRepository)
         {
             _quizRepository = quizRepository;
-            //_context = context;
+            _questionRepository = questionRepository;
         }
 
         // GET: Quizzes
@@ -43,8 +45,7 @@ namespace Quizzing.Web.Controllers
                 return NotFound(Constants.ErrorMessages.NotFound);
             }
 
-            var questions = await _context.Questions
-                .Where(q => q.QuizId == id).ToListAsync();
+            var questions = await _questionRepository.GetByQuizId(id);
 
             if (questions == null)
             {
@@ -100,7 +101,7 @@ namespace Quizzing.Web.Controllers
                 return NotFound(Constants.ErrorMessages.NotFound);
             }
 
-            var questions = await _context.Questions.Where(q => q.QuizId == id).ToListAsync();
+            var questions = await _questionRepository.GetByQuizId(id);
 
             var model = new EditQuizViewModel
             {

@@ -63,6 +63,7 @@ namespace Quizzing.Web
 
             services.AddScoped<AppDbContext>();
             services.AddScoped<IQuizRepository, QuizRepository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
