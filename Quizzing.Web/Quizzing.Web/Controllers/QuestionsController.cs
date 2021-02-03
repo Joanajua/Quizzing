@@ -78,7 +78,7 @@ namespace Quizzing.Web.Controllers
                 _context.Add(question);
                 await _context.SaveChangesAsync();
                 question.QuizId = quiz.QuizId;
-                return RedirectToAction(nameof(Create), "Answers", question);
+                return RedirectToAction(nameof(Create), "Answers", new { id = question.QuestionId });
             }
             return View(question);
         }

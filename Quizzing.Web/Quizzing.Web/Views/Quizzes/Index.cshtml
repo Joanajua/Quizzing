@@ -23,11 +23,11 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr class="row">
-                <td class="col-5">
+            <tr>
+                <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td class="col">
+                <td>
                     <a asp-action="Details" asp-route-id="@item.QuizId">See Questions</a>
 
                     @if (signInManager.IsSignedIn(User) && User.IsInRole("edit"))
