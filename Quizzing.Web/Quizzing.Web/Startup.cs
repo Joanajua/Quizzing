@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Quizzing.Web.Data;
 
@@ -29,6 +31,25 @@ namespace Quizzing.Web
 
 
             services.AddControllersWithViews();
+
+            // For Authorisation -- building and using a policy
+            services.AddMvc(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddXmlSerializerFormatters();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("admin",
+                    policy => policy.RequireRole("admin"));
+                options.AddPolicy("view",
+                    policy => policy.RequireRole("view"));
+                options.AddPolicy("restricted",
+                    policy => policy.RequireRole("restricted"));
+            });
 
             services.AddScoped<AppDbContext>();
         }

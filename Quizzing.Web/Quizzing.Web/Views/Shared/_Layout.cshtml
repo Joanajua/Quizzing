@@ -37,19 +37,19 @@
                         {
                         <li class="nav-item">
                             @*- Post action to logout the user to avoid malicious acts*@
-                            <form method="post" asp-controller="Accounts" asp-action="logout">
+                            <form method="post" asp-controller="Account" asp-action="logout">
                                 <button type="submit" class="nav-link btn btn-link py-0">
                                     Logout @User.Identity.Name
                                 </button>
                             </form>
                         </li>
                         }
-                        else
+                        @*else
                         {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Login">Login</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                         </li>
-                        }
+                        }*@
                     </ul>
                 </div>
             </div>
