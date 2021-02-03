@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,32 +21,35 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex">
                     <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Quizzes" asp-action="Index">Quizzes</a>
+                        </li>
                         @*If role is "admin*@
-                        @*@if (signInManager.IsSignedIn(User) && User.IsInRole("admin"))
-                        {*@
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Quizzes" asp-action="Create">Add Quiz</a>
-                            </li>
-                        @*}*@
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole("admin"))
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Quizzes" asp-action="Create">Add Quiz</a>
+                        </li>
+                        }
                     </ul>
                     <ul class="navbar-nav flex-row-reverse">
-                        @*@if (signInManager.IsSignedIn(User))
-                        {*@
-                            <li class="nav-item">
-                                @*- Post action to logout the user to avoid malicious acts*@
-                                <form method="post" asp-controller="Account" asp-action="logout">
-                                    <button type="submit" class="nav-link btn btn-link py-0">
-                                        Logout @User.Identity.Name
-                                    </button>
-                                </form>
-                            </li>
-                        @*}
-                        else
-                        {*@
+                        @if (signInManager.IsSignedIn(User))
+                        {
                         <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                        @*}*@
+                            @*- Post action to logout the user to avoid malicious acts*@
+                            <form method="post" asp-controller="Accounts" asp-action="logout">
+                                <button type="submit" class="nav-link btn btn-link py-0">
+                                    Logout @User.Identity.Name
+                                </button>
+                            </form>
+                        </li>
+                        }
+                        else
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Login">Login</a>
+                        </li>
+                        }
                     </ul>
                 </div>
             </div>
