@@ -12,17 +12,20 @@ namespace Quizzing.Web.Controllers
 {
     public class QuizzesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IQuizRepository _quizRepository;
 
-        public QuizzesController(AppDbContext context)
+        //private readonly AppDbContext _context;
+
+        public QuizzesController(IQuizRepository quizRepository)
         {
-            _context = context;
+            _quizRepository = quizRepository;
+            //_context = context;
         }
 
         // GET: Quizzes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Quizzes.ToListAsync());
+            return View(await _quizRepository.GetAll());
         }
 
         // GET: Quizzes/Details/5
@@ -33,8 +36,7 @@ namespace Quizzing.Web.Controllers
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var quiz = await _context.Quizzes
-                .FirstOrDefaultAsync(m => m.QuizId == id);
+            var quiz = await _quizRepository.GetById(id);
 
             if (quiz == null)
             {
@@ -73,8 +75,10 @@ namespace Quizzing.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(quiz);
-                await _context.SaveChangesAsync();
+                _quizRepository.Add(quiz);
+                //_context.Add(quiz);
+                await _quizRepository.Save();
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Create), "Questions", new {id = quiz.QuizId} );
             }
             return View(quiz);
@@ -89,7 +93,7 @@ namespace Quizzing.Web.Controllers
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var quiz = await _context.Quizzes.FindAsync(id);
+            var quiz = await _quizRepository.GetById(id);
 
             if (quiz == null)
             {
@@ -122,8 +126,10 @@ namespace Quizzing.Web.Controllers
             {
                 try
                 {
-                    _context.Update(quiz);
-                    await _context.SaveChangesAsync();
+                    _quizRepository.Update(quiz);
+                    //_context.Update(quiz);
+                    await _quizRepository.Save();
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -150,8 +156,9 @@ namespace Quizzing.Web.Controllers
                 return NotFound();
             }
 
-            var quiz = await _context.Quizzes
-                .FirstOrDefaultAsync(m => m.QuizId == id);
+            var quiz = await _quizRepository.GetById(id);
+                //_context.Quizzes
+                //.FirstOrDefaultAsync(m => m.QuizId == id);
             if (quiz == null)
             {
                 return NotFound();
@@ -166,16 +173,20 @@ namespace Quizzing.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var quiz = await _context.Quizzes.FindAsync(id);
-            _context.Quizzes.Remove(quiz);
-            await _context.SaveChangesAsync();
+            var quiz = await _quizRepository.GetById(id);
+                //_context.Quizzes.FindAsync(id);
+                _quizRepository.Remove(quiz);
+            //_context.Quizzes.Remove(quiz);
+            await _quizRepository.Save();
+            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Policy = "edit")]
         private bool QuizExists(int id)
         {
-            return _context.Quizzes.Any(e => e.QuizId == id);
+            return _quizRepository.QuizExists(id);
+                //_context.Quizzes.Any(e => e.QuizId == id);
         }
     }
 }
