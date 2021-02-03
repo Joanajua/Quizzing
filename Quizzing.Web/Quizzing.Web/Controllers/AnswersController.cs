@@ -99,7 +99,7 @@ namespace Quizzing.Web.Controllers
                 try
                 {
                     _answerRepository.Update(answer);
-                    _answerRepository.Save();
+                    await _answerRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

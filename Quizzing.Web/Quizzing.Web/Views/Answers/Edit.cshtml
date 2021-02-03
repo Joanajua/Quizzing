@@ -1,7 +1,7 @@
 ﻿@model Quizzing.Web.Models.Answer
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit - Answer";
 }
 
 <h1>Edit</h1>
@@ -32,7 +32,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Questions" asp-action="Edit" asp-route-id="@Model.QuestionId">Back to Question</a>
 </div>
 
 @section Scripts {
