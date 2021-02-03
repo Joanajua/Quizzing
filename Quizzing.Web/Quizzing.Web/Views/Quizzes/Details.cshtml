@@ -1,4 +1,6 @@
-﻿@model DetailsQuizViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+@model DetailsQuizViewModel
 @{int i = 1;}
 
 
@@ -11,7 +13,7 @@
 
 <table class="table">
     <thead>
-       
+
     </thead>
     <tbody>
         @if (Model.Questions.Any())
@@ -22,9 +24,13 @@
                     <td>
                         @(i++) - @Html.DisplayFor(modelItem => question.QuestionText)
                     </td>
-                    <td>
-                        <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">See Answers</a>
-                    </td>
+
+                    @if (signInManager.IsSignedIn(User) && (User.IsInRole("edit") || User.IsInRole("view")))
+                    {
+                        <td>
+                            <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">See Answers</a>
+                        </td>
+                    }
                 </tr>
             }
         }

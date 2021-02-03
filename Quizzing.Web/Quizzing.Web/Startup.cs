@@ -43,8 +43,8 @@ namespace Quizzing.Web
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("admin",
-                    policy => policy.RequireRole("admin"));
+                options.AddPolicy("edit",
+                    policy => policy.RequireRole("edit"));
                 options.AddPolicy("view",
                     policy => policy.RequireRole("view"));
                 options.AddPolicy("restricted",
@@ -70,8 +70,8 @@ namespace Quizzing.Web
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

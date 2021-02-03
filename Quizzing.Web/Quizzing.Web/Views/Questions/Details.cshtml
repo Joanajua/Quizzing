@@ -31,9 +31,6 @@
                 </td>
             </tr>
         }
-        
-        
-        
     }
     else
     {
@@ -47,7 +44,5 @@
 </table>
 
 <div>
-    @*<a asp-action="Edit" asp-route-id="@Model.Question.QuestionId">Edit Question</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Question.QuestionId">Delete Question</a> |*@
     <a asp-controller="Quizzes" asp-action="Details" asp-route-id="@Model.Question.QuizId">Back to Quiz</a>
 </div>

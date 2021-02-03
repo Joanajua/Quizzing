@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -20,52 +21,8 @@ namespace Quizzing.Web.Controllers
             _context = context;
         }
 
-        // GET: Answers
-        public async Task<IActionResult> Index(int questionId)
-        {
-            return View(await _context.Answers.Where(a=>a.QuestionId == questionId).ToListAsync());
-        }
-
-        // GET: Answers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var answer = await _context.Answers
-                .FirstOrDefaultAsync(m => m.AnswerId == id);
-            if (answer == null)
-            {
-                return NotFound();
-            }
-
-            return View(answer);
-        }
-
-        //// GET: Answers/Create
-        //public IActionResult Create(Question question)
-        //{
-        //    var answersInQuestion = _context.Answers.Where(a => a.QuestionId == question.QuestionId);
-
-        //    if (answersInQuestion.Count() <= 5)
-        //    {
-        //        var answer = new Answer
-        //        {
-        //            QuestionId = question.QuestionId,
-        //            AnswerText = ""
-        //        };
-
-        //        return View(answer);
-        //    }
-
-        //    var modelState = new ModelStateDictionary();
-        //    modelState.AddModelError(string.Empty, "Is not possible to add more than 5 answers for one question.");
-        //    return RedirectToAction(nameof(Edit), "Questions", question);
-        //}
-
         // GET: Answers/Create
+        [Authorize(Policy = "edit")]
         public IActionResult Create(int? id)
         {
             if (!id.HasValue)
@@ -90,6 +47,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Answers/Create
+        [Authorize(Policy = "edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AnswerId,QuestionId,AnswerText,IsCorrect")] Question question, Answer answer)
@@ -104,6 +62,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Answers/Edit/5
+        [Authorize(Policy = "edit")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (!id.HasValue)
@@ -121,6 +80,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Answers/Edit/5
+        [Authorize(Policy = "edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AnswerId,QuestionId,AnswerText,IsCorrect")] Answer answer)
@@ -154,6 +114,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Answers/Delete/5
+        [Authorize(Policy = "edit")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -172,6 +133,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Answers/Delete/5
+        [Authorize(Policy = "edit")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -182,6 +144,7 @@ namespace Quizzing.Web.Controllers
             return RedirectToAction(nameof(Edit), "Questions", new { id = answer.QuestionId });
         }
 
+        [Authorize(Policy = "edit")]
         private bool AnswerExists(int id)
         {
             return _context.Answers.Any(e => e.AnswerId == id);

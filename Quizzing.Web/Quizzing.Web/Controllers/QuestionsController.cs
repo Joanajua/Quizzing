@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +22,7 @@ namespace Quizzing.Web.Controllers
             _context = context;
         }
 
-        // GET: Questions
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Questions.ToListAsync());
-        }
-
+        [Authorize(Roles = "edit, view")]
         // GET: Questions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,13 +41,6 @@ namespace Quizzing.Web.Controllers
 
             var answers = await _context.Answers
                 .Where(m => m.QuestionId == id).ToListAsync();
-           
-            //    if (answers == null)
-            //    {
-            //        return NotFound(ErrorMessages.NotFoundAnswer);
-            //    }
-
-            //    question.Answers = answers;
 
             var model = new DetailsQuestionViewModel
             {
@@ -62,6 +51,7 @@ namespace Quizzing.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Policy = "edit")]
         // GET: Questions/Create
         public IActionResult Create(int? id)
         {
@@ -77,6 +67,7 @@ namespace Quizzing.Web.Controllers
             return View(question);
         }
 
+        [Authorize(Policy = "edit")]
         // POST: Questions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -92,6 +83,7 @@ namespace Quizzing.Web.Controllers
             return View(question);
         }
 
+        [Authorize(Policy = "edit")]
         // GET: Questions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -119,6 +111,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Questions/Edit/5
+        [Authorize(Policy = "edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("QuestionId,QuizId,QuestionText")] Question question)
@@ -152,6 +145,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Questions/Delete/5
+        [Authorize(Policy = "edit")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -170,6 +164,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Questions/Delete/5
+        [Authorize(Policy = "edit")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -180,6 +175,7 @@ namespace Quizzing.Web.Controllers
             return RedirectToAction(nameof(Edit), "Quizzes", new {id = question.QuizId});
         }
 
+        [Authorize(Policy = "edit")]
         private bool QuestionExists(int id)
         {
             return _context.Questions.Any(e => e.QuestionId == id);

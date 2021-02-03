@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Quizzing.Web.Data;
@@ -58,12 +59,14 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Quizzes/Create
+        [Authorize(Policy = "edit")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Quizzes/Create
+        [Authorize(Policy = "edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("QuizId,Title")] Quiz quiz)
@@ -78,6 +81,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Quizzes/Edit/5
+        [Authorize(Policy = "edit")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (!id.HasValue)
@@ -104,6 +108,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Quizzes/Edit/5
+        [Authorize(Policy = "edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("QuizId,Title")] Quiz quiz)
@@ -137,6 +142,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // GET: Quizzes/Delete/5
+        [Authorize(Policy = "edit")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -155,6 +161,7 @@ namespace Quizzing.Web.Controllers
         }
 
         // POST: Quizzes/Delete/5
+        [Authorize(Policy = "edit")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -165,6 +172,7 @@ namespace Quizzing.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Policy = "edit")]
         private bool QuizExists(int id)
         {
             return _context.Quizzes.Any(e => e.QuizId == id);

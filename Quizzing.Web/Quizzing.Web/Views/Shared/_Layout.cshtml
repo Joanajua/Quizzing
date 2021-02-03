@@ -22,10 +22,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Quizzes" asp-action="Index">Quizzes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Quizzes" asp-action="Index">List of Quizzes</a>
                         </li>
                         @*If role is "admin*@
-                        @if (signInManager.IsSignedIn(User) && User.IsInRole("admin"))
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole("edit"))
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Quizzes" asp-action="Create">Add Quiz</a>
@@ -44,12 +44,6 @@
                             </form>
                         </li>
                         }
-                        @*else
-                        {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-                        }*@
                     </ul>
                 </div>
             </div>
