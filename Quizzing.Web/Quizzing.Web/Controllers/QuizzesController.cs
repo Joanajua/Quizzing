@@ -15,9 +15,6 @@ namespace Quizzing.Web.Controllers
         private readonly IQuizRepository _quizRepository;
         private readonly IQuestionRepository _questionRepository;
 
-
-        //private readonly AppDbContext _context;
-
         public QuizzesController(IQuizRepository quizRepository, IQuestionRepository questionRepository)
         {
             _quizRepository = quizRepository;
@@ -77,11 +74,12 @@ namespace Quizzing.Web.Controllers
             if (ModelState.IsValid)
             {
                 _quizRepository.Add(quiz);
-                //_context.Add(quiz);
+
                 await _quizRepository.Save();
-                //await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Create), "Questions", new {id = quiz.QuizId} );
             }
+
             return View(quiz);
         }
 
@@ -128,9 +126,8 @@ namespace Quizzing.Web.Controllers
                 try
                 {
                     _quizRepository.Update(quiz);
-                    //_context.Update(quiz);
+
                     await _quizRepository.Save();
-                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -143,6 +140,7 @@ namespace Quizzing.Web.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Edit));
             }
             return View();
@@ -158,8 +156,7 @@ namespace Quizzing.Web.Controllers
             }
 
             var quiz = await _quizRepository.GetById(id);
-                //_context.Quizzes
-                //.FirstOrDefaultAsync(m => m.QuizId == id);
+                
             if (quiz == null)
             {
                 return NotFound();
@@ -175,11 +172,11 @@ namespace Quizzing.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var quiz = await _quizRepository.GetById(id);
-                //_context.Quizzes.FindAsync(id);
-                _quizRepository.Remove(quiz);
-            //_context.Quizzes.Remove(quiz);
+
+            _quizRepository.Remove(quiz);
+
             await _quizRepository.Save();
-            //await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -187,7 +184,6 @@ namespace Quizzing.Web.Controllers
         private bool QuizExists(int id)
         {
             return _quizRepository.QuizExists(id);
-                //_context.Quizzes.Any(e => e.QuizId == id);
         }
     }
 }

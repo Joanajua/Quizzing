@@ -1,7 +1,7 @@
 ﻿@model DetailsQuestionViewModel
 
 @{
-    string[] leters = new[] {"A", "B", "C", "D", "E"};
+    string[] letters = new[] {"A", "B", "C", "D", "E"};
 }
 
 @{
@@ -9,8 +9,6 @@
 }
 
 <h1>@Html.DisplayFor(model => model.Question.QuestionText)</h1>
-
-
 
 <table class="table">
     <thead></thead>
@@ -20,10 +18,10 @@
         @for (int i = 0; i < @Model.Answers.Count(); i++)
         {
             <tr>
-                <td>
-                    @(leters[i]) - @Html.DisplayFor(modelItem => Model.Answers[i].AnswerText)
+                <td colspan="5">
+                    @(letters[i]) - @Html.DisplayFor(modelItem => Model.Answers[i].AnswerText)
                 </td>
-                <td>
+                <td colspan="2">
                     @if (Model.Answers[i].IsCorrect)
                     {
                         <h6 class="text-info">CORRECT </h6>

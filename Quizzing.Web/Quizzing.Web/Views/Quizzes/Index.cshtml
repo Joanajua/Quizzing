@@ -9,33 +9,41 @@
 <h1>List of Quizzes</h1>
 
 <p>
-    <a asp-action="Create">Create New Quiz</a>
+    <a class="btn btn-primary" asp-action="Create">Create New Quiz</a>
 </p>
-<table class="table">
-    <thead>
+<table class="table table-hover">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th></th>
+            @Html.DisplayNameFor(model => model.Title)
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td colspan="5">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td colspan="2">
+                        <a asp-action="Details" asp-route-id="@item.QuizId">See Questions</a>
+
+                        @if (signInManager.IsSignedIn(User) && User.IsInRole("edit"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.QuizId"> | Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.QuizId"> | Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.QuizId">See Questions</a>
-
-                    @if (signInManager.IsSignedIn(User) && User.IsInRole("edit"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.QuizId"> | Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.QuizId"> | Delete</a>
-                    }
-                </td>
+                <th scope="row">
+                    <h4 class="alert-heading alert-info">There are no quizzes.</h4>
+                </th>
             </tr>
         }
     </tbody>
