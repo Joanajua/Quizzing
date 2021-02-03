@@ -3,30 +3,33 @@
 @model IEnumerable<Quizzing.Web.Models.Quiz>
 
 @{
-    ViewData["Title"] = "Index - Quizzes";
+    ViewData["Title"] = "List of Quizzes";
 }
 
 <h1>List of Quizzes</h1>
 
-<p>
+<div>
     <a class="btn btn-primary" asp-action="Create">Create New Quiz</a>
-</p>
-<table class="table table-hover">
+</div>
+<table class="table table-hover pt-5">
     <thead class="thead-dark">
-        <tr>
+    <tr>
+        <th>
             @Html.DisplayNameFor(model => model.Title)
-        </tr>
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
         @if (Model.Any())
         {
             @foreach (var item in Model)
             {
-                <tr>
-                    <td colspan="5">
+                <tr class="col-10">
+                    <td>
                         @Html.DisplayFor(modelItem => item.Title)
                     </td>
-                    <td colspan="2">
+                    <td>
                         <a asp-action="Details" asp-route-id="@item.QuizId">See Questions</a>
 
                         @if (signInManager.IsSignedIn(User) && User.IsInRole("edit"))

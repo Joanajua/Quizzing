@@ -21,7 +21,7 @@ NUGET PACKAGES NEEDED TO BUILD THE APPLICATION
 	○ Microsoft.EntityFrameworkCore.Tools v3.1.11
 	○ Npgsql.EntityFrameworkCore.PostgreSQL v3.1.1
 	○ Microsoft.EntityFrameworkCore.Sqlite v3.1.10
-	○ Microsoft.EntityFrameworkCore.SqlServer v3.1.10
+	○ Microsoft.EntityFrameworkCore.SqlServer v3.1.11
 
 	○ Microsoft.AspNetCore.Identity.EntityFrameworkCore v 3.1.10
 	○ Microsoft.AspNetCore.Identity.UI v3.1.10
