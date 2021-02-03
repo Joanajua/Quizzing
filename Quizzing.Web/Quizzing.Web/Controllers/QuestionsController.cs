@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,12 @@ namespace Quizzing.Web.Controllers
     public class QuestionsController : Controller
     {
         private readonly IQuestionRepository _questionRepository;
-
-
-        public QuestionsController(IQuestionRepository questionRepository)
+        private readonly IAnswerRepository _answerRepository;
+        
+        public QuestionsController(IQuestionRepository questionRepository, IAnswerRepository answerRepository)
         {
             _questionRepository = questionRepository;
+            _answerRepository = answerRepository;
         }
 
         [Authorize(Roles = "edit, view")]
@@ -29,21 +31,18 @@ namespace Quizzing.Web.Controllers
             }
 
             var question = await _questionRepository.GetByQuestionId(id);
-                //_context.Questions
-                //.FirstOrDefaultAsync(m => m.QuestionId == id);
-
+                
             if (question == null)
             {
                 return NotFound(Constants.ErrorMessages.NotFoundQuestion);
             }
 
-            var answers = await _context.Answers
-                .Where(m => m.QuestionId == id).ToListAsync();
-
+            var answers = await _answerRepository.GetByQuestionId(id);
+                
             var model = new DetailsQuestionViewModel
             {
                 Question = question,
-                Answers = answers,
+                Answers = answers
             };
 
             return View(model);
@@ -65,19 +64,20 @@ namespace Quizzing.Web.Controllers
             return View(question);
         }
 
-        [Authorize(Policy = "edit")]
         // POST: Questions/Create
+        [Authorize(Policy = "edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("QuestionId,QuizId,QuestionText")] Quiz quiz, Question question)
+        public async Task<IActionResult> Create([Bind("QuestionId,QuizId,QuestionText")] Question question)
         {
             if (ModelState.IsValid)
             {
                 _questionRepository.Add(question);
-                //_context.Add(question);
+
                 await _questionRepository.Save();
-                //await _context.SaveChangesAsync();
-                question.QuizId = quiz.QuizId;
+
+                //question.QuizId = quiz.QuizId;
+
                 return RedirectToAction(nameof(Create), "Answers", new { id = question.QuestionId });
             }
             return View(question);
@@ -93,14 +93,13 @@ namespace Quizzing.Web.Controllers
             }
 
             var question = await _questionRepository.GetByQuestionId(id);
-                //_context.Questions.FindAsync(id);
 
             if (question == null)
             {
                 return NotFound(Constants.ErrorMessages.NotFoundQuestion);
             }
 
-            var answers = await _context.Answers.Where(a => a.QuestionId == id).ToListAsync();
+            var answers = await _answerRepository.GetByQuestionId(id);
 
             var model = new EditQuestionViewModel
             {
@@ -127,9 +126,7 @@ namespace Quizzing.Web.Controllers
                 try
                 {
                     _questionRepository.Update(question);
-                    //_context.Update(question);
                     await _questionRepository.Save();
-                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -157,8 +154,7 @@ namespace Quizzing.Web.Controllers
             }
 
             var question = await _questionRepository.GetByQuestionId(id);
-                //_context.Questions
-                //.FirstOrDefaultAsync(m => m.QuestionId == id);
+
             if (question == null)
             {
                 return NotFound(Constants.ErrorMessages.NotFoundQuestion);
@@ -175,10 +171,9 @@ namespace Quizzing.Web.Controllers
         {
             var question = await _questionRepository.GetByQuestionId(id);
             _questionRepository.Remove(question);
-            //    await _context.Questions.FindAsync(id);
-            //_context.Questions.Remove(question);
+
             await _questionRepository.Save();
-            //await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Edit), "Quizzes", new {id = question.QuizId});
         }
 
@@ -186,7 +181,6 @@ namespace Quizzing.Web.Controllers
         private bool QuestionExists(int id)
         {
             return _questionRepository.QuestionExists(id);
-                //_context.Questions.Any(e => e.QuestionId == id);
         }
     }
 }

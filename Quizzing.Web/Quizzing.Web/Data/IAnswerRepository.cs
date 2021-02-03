@@ -6,7 +6,7 @@ namespace Quizzing.Web.Data
 {
     public interface IAnswerRepository
     {
-        Task<IEnumerable<Answer>> GetByQuestionId(int? questionId);
+        Task<List<Answer>> GetByQuestionId(int? questionId);
         Task<Answer> GetByAnswerId(int? answerId);
 
         bool AnswerExists(int id);

@@ -9,7 +9,7 @@ namespace Quizzing.Web.ViewModels.Questions
     public class CreateAnswerViewModel
     {
         public Question Question { get; set; }
-        public Answer Anser { get; set; }
+        public Answer Answer { get; set; }
         public IEnumerable<Answer> Answers { get; set; }
 
     }
