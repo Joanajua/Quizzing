@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Quizzing.Web.Data;
 using Quizzing.Web.Models;
@@ -15,11 +11,12 @@ namespace Quizzing.Web.Controllers
 {
     public class QuestionsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IQuestionRepository _questionRepository;
 
-        public QuestionsController(AppDbContext context)
+
+        public QuestionsController(IQuestionRepository questionRepository)
         {
-            _context = context;
+            _questionRepository = questionRepository;
         }
 
         [Authorize(Roles = "edit, view")]
@@ -31,8 +28,9 @@ namespace Quizzing.Web.Controllers
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var question = await _context.Questions
-                .FirstOrDefaultAsync(m => m.QuestionId == id);
+            var question = await _questionRepository.GetByQuestionId(id);
+                //_context.Questions
+                //.FirstOrDefaultAsync(m => m.QuestionId == id);
 
             if (question == null)
             {
@@ -75,8 +73,10 @@ namespace Quizzing.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(question);
-                await _context.SaveChangesAsync();
+                _questionRepository.Add(question);
+                //_context.Add(question);
+                await _questionRepository.Save();
+                //await _context.SaveChangesAsync();
                 question.QuizId = quiz.QuizId;
                 return RedirectToAction(nameof(Create), "Answers", new { id = question.QuestionId });
             }
@@ -92,7 +92,8 @@ namespace Quizzing.Web.Controllers
                 return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var question = await _context.Questions.FindAsync(id);
+            var question = await _questionRepository.GetByQuestionId(id);
+                //_context.Questions.FindAsync(id);
 
             if (question == null)
             {
@@ -125,8 +126,10 @@ namespace Quizzing.Web.Controllers
             {
                 try
                 {
-                    _context.Update(question);
-                    await _context.SaveChangesAsync();
+                    _questionRepository.Update(question);
+                    //_context.Update(question);
+                    await _questionRepository.Save();
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -148,16 +151,17 @@ namespace Quizzing.Web.Controllers
         [Authorize(Policy = "edit")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
-            var question = await _context.Questions
-                .FirstOrDefaultAsync(m => m.QuestionId == id);
+            var question = await _questionRepository.GetByQuestionId(id);
+                //_context.Questions
+                //.FirstOrDefaultAsync(m => m.QuestionId == id);
             if (question == null)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.NotFoundQuestion);
             }
 
             return View(question);
@@ -169,16 +173,20 @@ namespace Quizzing.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var question = await _context.Questions.FindAsync(id);
-            _context.Questions.Remove(question);
-            await _context.SaveChangesAsync();
+            var question = await _questionRepository.GetByQuestionId(id);
+            _questionRepository.Remove(question);
+            //    await _context.Questions.FindAsync(id);
+            //_context.Questions.Remove(question);
+            await _questionRepository.Save();
+            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Edit), "Quizzes", new {id = question.QuizId});
         }
 
         [Authorize(Policy = "edit")]
         private bool QuestionExists(int id)
         {
-            return _context.Questions.Any(e => e.QuestionId == id);
+            return _questionRepository.QuestionExists(id);
+                //_context.Questions.Any(e => e.QuestionId == id);
         }
     }
 }
