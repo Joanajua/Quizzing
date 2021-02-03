@@ -15,7 +15,6 @@ namespace Quizzing.Web.Models
         public int QuestionId { get; set; }
 
         [DisplayName("Answer Text")]
-        [MaxLength(150, ErrorMessage = "Answer cannot exceed 150 characters.")]
         public string AnswerText { get; set; }
 
         [DisplayName("Correct answer")]

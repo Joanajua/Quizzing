@@ -20,7 +20,7 @@
             <input type="hidden" asp-for="Question.QuestionId" />
             <div class="form-group">
                 <label asp-for="Question.QuestionText" class="control-label"></label>
-                <input asp-for="Question.QuestionText" class="form-control" required maxlength="150"/>
+                <input asp-for="Question.QuestionText" class="form-control" />
                 <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
             </div>
             <div class="form-group">

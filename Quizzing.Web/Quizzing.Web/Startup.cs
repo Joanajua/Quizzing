@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Quizzing.Web.Data;
+using Quizzing.Web.Validators;
 
 namespace Quizzing.Web
 {
@@ -29,6 +31,14 @@ namespace Quizzing.Web
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
+            services.AddControllersWithViews()
+                .AddFluentValidation(config =>
+                {
+                    config.RegisterValidatorsFromAssemblyContaining<QuizValidator>();
+                    config.RegisterValidatorsFromAssemblyContaining<QuestionValidator>();
+                    config.RegisterValidatorsFromAssemblyContaining<AnswerValidator>();
+                    config.ImplicitlyValidateChildProperties = true;
+                });
 
             services.AddControllersWithViews();
 
