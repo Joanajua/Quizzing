@@ -76,7 +76,7 @@ namespace Quizzing.Web.Controllers
 
                 await _questionRepository.Save();
 
-                //question.QuizId = quiz.QuizId;
+                TempData["info"] = "The question text has been saved.";
 
                 return RedirectToAction(nameof(Create), "Answers", new { id = question.QuestionId });
             }
@@ -139,6 +139,9 @@ namespace Quizzing.Web.Controllers
                         throw;
                     }
                 }
+
+                TempData["info"] = "The question text has been updated.";
+
                 return RedirectToAction(nameof(Edit),new {id = question.QuestionId});
             }
             return View();
@@ -160,6 +163,7 @@ namespace Quizzing.Web.Controllers
                 return NotFound(Constants.ErrorMessages.NotFoundQuestion);
             }
 
+
             return View(question);
         }
 
@@ -173,6 +177,8 @@ namespace Quizzing.Web.Controllers
             _questionRepository.Remove(question);
 
             await _questionRepository.Save();
+
+            TempData["info"] = "The question has been deleted";
 
             return RedirectToAction(nameof(Edit), "Quizzes", new {id = question.QuizId});
         }

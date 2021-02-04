@@ -6,6 +6,17 @@
 
 @{
     ViewData["Title"] = "Edit Question";
+    ViewData["Info"] = TempData["info"];
+}
+
+@if (TempData["info"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading"> @ViewData["Info"] </h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 }
 
 <h1>Edit Question</h1>
@@ -69,7 +80,19 @@ else
 
 <div>
     <input type="hidden" asp-for="Question.QuestionId" />
-    <a asp-controller="Answers" asp-action="Create" asp-route-id="@Model.Question.QuestionId">Add answer | </a>
+    @if (@Model.Answers.Count < 5)
+    {
+        <a asp-controller="Answers" asp-action="Create" asp-route-id="@Model.Question.QuestionId">Add answer | </a>
+    }
+    else
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <h4 class="alert-heading"> The maximum number of answers has been reached. </h4>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
     <a asp-controller="Quizzes" asp-action="Edit" asp-route-id="@Model.Question.QuizId">Back to Quiz</a>
 </div>
 

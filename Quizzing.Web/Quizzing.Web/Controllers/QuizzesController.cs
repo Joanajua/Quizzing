@@ -77,6 +77,8 @@ namespace Quizzing.Web.Controllers
 
                 await _quizRepository.Save();
 
+                TempData["info"] = "The quiz title has been saved";
+
                 return RedirectToAction(nameof(Create), "Questions", new {id = quiz.QuizId} );
             }
 
@@ -141,6 +143,8 @@ namespace Quizzing.Web.Controllers
                     }
                 }
 
+                TempData["info"] = "The quiz title has been updated";
+
                 return RedirectToAction(nameof(Edit));
             }
             return View();
@@ -176,6 +180,9 @@ namespace Quizzing.Web.Controllers
             _quizRepository.Remove(quiz);
 
             await _quizRepository.Save();
+
+            TempData["info"] = "The quiz has been deleted";
+
 
             return RedirectToAction(nameof(Index));
         }

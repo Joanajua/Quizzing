@@ -2,6 +2,17 @@
 
 @{
     ViewData["Title"] = "Edit Quiz";
+    ViewData["Info"] = TempData["info"];
+}
+
+@if (TempData["info"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading"> @TempData["info"] </h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 }
 
 <h1>Edit Quiz</h1>
@@ -26,22 +37,22 @@
 {
     <table class="table">
         <thead>
-        <tr>
-        
-        </tr>
+            <tr>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var question in Model.Questions) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => question.QuestionText)
-                </td>
-                <td>
-                    <a asp-controller="Questions" asp-action="Edit" asp-route-id="@question.QuestionId">Edit</a> |
-                    <a asp-controller="Questions" asp-action="Delete" asp-route-id="@question.QuestionId">Delete</a>
-                </td>
-            </tr>
-        }
+            @foreach (var question in Model.Questions)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => question.QuestionText)
+                    </td>
+                    <td>
+                        <a asp-controller="Questions" asp-action="Edit" asp-route-id="@question.QuestionId">Edit</a> |
+                        <a asp-controller="Questions" asp-action="Delete" asp-route-id="@question.QuestionId">Delete</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }

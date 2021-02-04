@@ -45,6 +45,8 @@ namespace Quizzing.Web.Controllers
                 return View(answer);
             }
 
+            TempData["info"] = "It is not possible to create more than 5 answers per question.";
+
             return RedirectToAction(nameof(Edit), "Questions", new{ id = id });
         }
 
@@ -59,7 +61,9 @@ namespace Quizzing.Web.Controllers
                 _answerRepository.Add(answer);
 
                 await _answerRepository.Save();
-                
+
+                TempData["info"] = "The answer has been saved.";
+
                 return RedirectToAction(nameof(Edit), "Questions", new { id = answer.QuestionId });
             }
             return View(answer);
@@ -112,6 +116,9 @@ namespace Quizzing.Web.Controllers
                         throw;
                     }
                 }
+
+                TempData["info"] = "The answer has been updated.";
+
                 return RedirectToAction(nameof(Edit), "Questions",new {id = answer.QuestionId});
             }
             return View();
@@ -147,6 +154,8 @@ namespace Quizzing.Web.Controllers
             _answerRepository.Remove(answer);
 
             await _answerRepository.Save();
+
+            TempData["info"] = "The answer has been deleted.";
 
             return RedirectToAction(nameof(Edit), "Questions", new { id = answer.QuestionId });
         }
