@@ -10,8 +10,13 @@
 
 <h1>@Html.DisplayFor(model => model.Question.QuestionText)</h1>
 
-<table class="table">
-    <thead></thead>
+<table class="table pt-3">
+    <thead class="thead-dark">
+        <tr>
+            <th>Answers</th>
+            <th></th>
+        </tr>
+    </thead>
     <tbody>
     @if (Model.Answers.Any())
     {

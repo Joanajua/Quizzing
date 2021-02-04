@@ -2,6 +2,17 @@
 
 @{
     ViewData["Title"] = "Create - Answer";
+    ViewData["Info"] = TempData["info"];
+}
+
+@if (TempData["info"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading"> @ViewData["Info"] </h4>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 }
 
 <h1>Create Answer</h1>
