@@ -5,14 +5,14 @@ namespace Quizzing.Web.Data
 {
     public static class SeedData
     {
-        private static Quiz[] _mockQuizzes = new[]
+        private static readonly Quiz[] _mockQuizzes = new[]
         {
             new Quiz {QuizId = 1, Title = "Quiz 1"},
             new Quiz {QuizId = 2, Title = "Quiz 2"},
             new Quiz {QuizId = 3, Title = "Quiz 3"},
         };
 
-        private static Question[] _mockQuestions = new[]
+        private static readonly Question[] _mockQuestions = new[]
         {
             new Question {QuestionId = 1, QuizId = 1, QuestionText = "Question 1"},
             new Question {QuestionId = 2, QuizId = 1, QuestionText = "Question 2"},
@@ -27,7 +27,7 @@ namespace Quizzing.Web.Data
             new Question {QuestionId = 9, QuizId = 3, QuestionText = "Question 3"},
         };
 
-        private static Answer[] _mockAnswers = new[]
+        private static readonly Answer[] _mockAnswers = new[]
         {
             new Answer {AnswerId = 1,  QuestionId = 1, AnswerText = "Answer 1"},
             new Answer {AnswerId = 2,  QuestionId = 1, AnswerText = "Answer 2"},
