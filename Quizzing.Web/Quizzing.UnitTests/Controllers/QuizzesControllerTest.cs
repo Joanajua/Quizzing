@@ -366,5 +366,26 @@ namespace Quizzing.UnitTests
             Assert.NotNull(result);
             Assert.Equal(expectedQuiz.QuizId, model.QuizId);
         }
+
+        [Fact]
+        public async Task DeleteConfirmed_post_action_result_should_redirect_to_action_when_modelState_valid()
+        {
+            var id = 1;
+
+            var httpContext = new DefaultHttpContext();
+
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object)
+            {
+                TempData = tempData
+            };
+
+            // Act
+            var result = await controller.DeleteConfirmed(id);
+
+            // Assert
+            Assert.IsType<RedirectToActionResult>(result);
+        }
     }
 }
