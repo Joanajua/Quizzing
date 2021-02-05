@@ -1,16 +1,7 @@
 "# Quizzing" 
-RUN THE APPLICATION FOR THE FIRST TIME
-
->> Add own local postgres database id and password to the conection string in the appsettings.json file:
-"AppConnection": "User ID=USERID;Password=PASSWORD;Host=localhost;Port=5432;Database=quizzing;"
-
-When the application detects that the database does not exist,
-it runs the migrations and create the database that will be built with the respective tables and sample data.
-There will be 3 quizes as an example with their own questions and answers and also an admin user, one admin role and one readonly role will be created.
-
->>--------------------------
-
 NUGET PACKAGES NEEDED TO BUILD THE APPLICATION
+
+The following Nuget packages are needed for the appiclation to run:
 
 >>Quizzing.Web project
 
@@ -44,35 +35,43 @@ NUGET PACKAGES NEEDED TO BUILD THE APPLICATION
 	○ Moq v4.15.2
 
 >>--------------------------
+CHANGE POSTGRESS CONECTION STRING
 
-HOW TO ACCESS TO THE APPLICATION
+>> Add own local postgres database id and password to the conection string in the appsettings.json file:
+"AppConnection": "User ID=USERID;Password=PASSWORD;Host=localhost;Port=5432;Database=quizzing;"
 
-An admin user assigned to the admin role will be created the first time the application runs
-and has to be used to access the application as an administrator:
+Now run the program; when the application detects that the database does not exist,
+it runs the migrations and create the database that will be built with the respective tables and sample data for quizzes.
+There will be 3 quizes as an example with their own questions and answers and also an admin user, one admin role and one readonly role will be created.
 
->> Go to Login and use the following credentials.
-Email: admin@mailinator.com
-Pasword: Abcd123456@
+>>--------------------------
+FEED USERS AND ROLES
 
-A read-only role (readonly) will also be generated at the start of the application.
+To feed the database with users, there are 3 CVS documents on the application root folder inside a folder named "Identity-datafiles".
+1- Import the AspNetUsers file into the AspNetUsers table. When importing could throw an error, due to a timezone column, and postgres justs copies 2 users; in that case,
+enter the other user by hand copying directly from the file.
+2- Import the AspNetRoles file into the AspNetRoles table. This should not cause any problem.
+3- Import the AspNetUserRoles file into the AspNetUserRoles table.
 
-To register a new user go to Register and enter an email and a valid password - this is at least
-10 characteres with at least 1 uppercase and with at least one symbol.
+ACCESS TO THE APPLICATION BY LOGIN
 
-When registering a new user, this will be assigned to the readonly role automatically;
-if this user needs to be assigned to another role, an admin user with an admin role can
-assign a new role to it inside the users and roles managment side of the application.
+Now there are 3 users created:
 
->> Go to Management > Roles > Create new role (if a new role needs to be created).
->> Go to Management > Users > Edit user > Manage Roles > select the new user and assign a new role to it.
+edit@webbiskools.com
+view@webbiskools.com
+restricted@webbiskools.com
+
+The password for all of them is:
+Abcd123456@
+
+Each of the users is assigned to one role: edit, view or restricted; when the application starts, the UI shows directly the Login page.
 
 >>--------------------------
 
 DIFFERENT USER Roles
 
-- Users with admin role will be able to access to the whole application.
-- Users with readonly role will be able to login, access to the index page,
-the list of quizzes and the Details page where they can see the questions and answers for a quiz.
-- Users unregistered or unlogged can access to the login, resgister and Index page.
-They can also access to the List of quizzes; when accessing to the Details page
-they can see the questions for a quizz but not the answers.
+As per the busines requirements each user has a different grade of authorisation.
+
+- Users with edit role will be able to access to the whole application.
+- Users with view role will be able to see the list of quizzes and on each of them the list questions and answers.
+- Users with restricted role will be able to see the list of quizzes and on each of them the list questions but not the answers.
