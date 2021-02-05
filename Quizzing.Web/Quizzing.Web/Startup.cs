@@ -75,7 +75,9 @@ namespace Quizzing.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                // When in production shows Error page to user.
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

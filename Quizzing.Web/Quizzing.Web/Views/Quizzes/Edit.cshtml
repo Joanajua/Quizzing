@@ -1,5 +1,7 @@
 ﻿@model EditQuizViewModel
 
+@{int i = 1;}
+
 @{
     ViewData["Title"] = "Edit Quiz";
     ViewData["Info"] = TempData["info"];
@@ -45,7 +47,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => question.QuestionText)
+                        @(i++) - @Html.DisplayFor(modelItem => question.QuestionText)
                     </td>
                     <td>
                         <a asp-controller="Questions" asp-action="Edit" asp-route-id="@question.QuestionId">Edit</a> |

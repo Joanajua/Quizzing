@@ -18,7 +18,7 @@ namespace Quizzing.Web.Data
 
         public async Task<IEnumerable<Quiz>> GetAll()
         {
-            return await _context.Quizzes.ToListAsync();
+            return await _context.Quizzes.OrderBy(q=>q.QuizId).ToListAsync();
         }
 
         public async Task<Quiz> GetById(int? quizId)
