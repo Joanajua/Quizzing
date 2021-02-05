@@ -2,7 +2,6 @@
 
 @{
     string[] letters = new[] { "A", "B", "C", "D", "E" };
-    bool IsClicked = false;
 }
 
 @{
@@ -11,38 +10,31 @@
 
 <h1>@Html.DisplayFor(model => model.Question.QuestionText)</h1>
 
-<table class="table pt-3">
-    <thead class="pt-3">
-    </thead>
-    <tbody>
-        @if (Model.Answers.Any())
-        {
-            @for (int i = 0; i < @Model.Answers.Count(); i++)
-            {
-                <tr>
-                    <td colspan="5">
-                        @(letters[i]) - @Html.DisplayFor(modelItem => Model.Answers[i].AnswerText)
-                    </td>
-                    <td colspan="2">
-                        @if (Model.Answers[i].IsCorrect)
-                        {
-                            <h6 class="text-info">CORRECT </h6>
-                        }
-                    </td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <th scope="row">
-                    <h4 class="alert-heading alert-info">There are no questions for the requested quiz.</h4>
-                </th>
-            </tr>
-        }
-    </tbody>
-</table>
 
-<div>
+@if (Model.Answers.Any())
+{
+    @for (int i = 0; i < @Model.Answers.Count(); i++)
+    {
+        <div class="card my-3">
+            <div class="card-body">
+
+                <h5 class="card-text">@(letters[i]) - @Html.DisplayFor(modelItem => Model.Answers[i].AnswerText)</h5>
+                @if (Model.Answers[i].IsCorrect)
+                {
+                    <h6 class="text-success">Correct Answer</h6>
+                }
+
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="pt-4">
+        <h4 class="alert-heading alert-info">There are no answers for the requested question.</h4>
+    </div>
+}
+
+<div class="pt-3">
     <a asp-controller="Quizzes" asp-action="Details" asp-route-id="@Model.Question.QuizId">Back to Quiz</a>
 </div>

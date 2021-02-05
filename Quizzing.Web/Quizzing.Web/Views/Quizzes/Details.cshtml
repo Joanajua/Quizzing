@@ -10,39 +10,31 @@
 
 <h1>Quiz - @Html.DisplayFor(model => model.Quiz.Title)</h1>
 
-
-<table class="table table-hover pt-3">
-    <thead class="pt-3">
-    </thead>
-    <tbody>
-        @if (Model.Questions.Any())
-        {
-            @foreach (var question in Model.Questions)
+@if (Model.Questions.Any())
+{
+    @foreach (var question in @Model.Questions)
+    {
+        <div class="card my-3">
+            <div class="card-header card-title">
+                <h4>@(i++) - @Html.DisplayFor(modelItem => question.QuestionText) </h4>
+            </div>
+            @if (signInManager.IsSignedIn(User) && (User.IsInRole("edit") || User.IsInRole("view")))
             {
-                <tr>
-                    <td colspan="5">
-                        @(i++) - @Html.DisplayFor(modelItem => question.QuestionText)
-                    </td>
+                <div class="card-body">
 
-                    @if (signInManager.IsSignedIn(User) && (User.IsInRole("edit") || User.IsInRole("view")))
-                    {
-                        <td colspan="1">
-                            <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">See Answers</a>
-                        </td>
-                    }
-                </tr>
+                    <a asp-controller="Questions" asp-action="Details" asp-route-id="@question.QuestionId">See Answers</a>
+                </div>
             }
-        }
-        else
-        {
-            <tr>
-                <th scope="row">
-                    <h4 class="alert-heading alert-info">There are no questions for the requested quiz.</h4>
-                </th>
-            </tr>
-        }
-    </tbody>
-</table>
+        </div>
+    }
+}
+else
+{
+    <div class="pt-4">
+            <h4 class="alert-heading alert-info">There are no questions for the requested quiz.</h4>
+    </div>
+}
+        
 
 <div>
     <a asp-action="Index">Back to List</a>
