@@ -183,7 +183,7 @@ namespace Quizzing.UnitTests
         }
 
         [Fact]
-        public async Task Edit_action_result_method_should_return_BadRequest_when_quiz_id_is_null()
+        public async Task Edit_action_result_method_should_return_BadRequest_when_question_id_is_null()
         {
             // Arrange
             var controller = new QuestionsController(_questionRepository.Object, _answerRepository.Object);
@@ -199,13 +199,13 @@ namespace Quizzing.UnitTests
         }
 
         [Fact]
-        public async Task Edit_action_result_method_should_return_NotFound_when_no_quiz_found_for_id()
+        public async Task Edit_action_result_method_should_return_NotFound_when_no_question_found_for_id()
         {
             // Arrange
             var id = 0;
-            var expectedQuestions = _testData.GetTestQuestions().Where(q => q.QuizId == id);
+            var expectedQuestion = _testData.GetTestQuestions().FirstOrDefault(q => q.QuestionId == id);
 
-            _questionRepository.Setup(repo => repo.GetByQuizId(id)).ReturnsAsync(expectedQuestions);
+            _questionRepository.Setup(repo => repo.GetByQuestionId(id)).ReturnsAsync(expectedQuestion);
             var controller = new QuestionsController(_questionRepository.Object, _answerRepository.Object);
 
             // Act
@@ -265,7 +265,7 @@ namespace Quizzing.UnitTests
         }
 
         [Fact]
-        public async Task Edit_post_action_result_method_should_return_BadRequest_when_id_received_different_to_quizId()
+        public async Task Edit_post_action_result_method_should_return_BadRequest_when_id_received_different_to_questionId()
         {
             // Arrange
             var id = 0;
@@ -290,7 +290,7 @@ namespace Quizzing.UnitTests
         }
 
         [Fact]
-        public async Task Delete_action_result_method_should_return_BadRequest_when_quiz_id_is_null()
+        public async Task Delete_action_result_method_should_return_BadRequest_when_question_id_is_null()
         {
             // Arrange
             var controller = new QuestionsController(_questionRepository.Object, _answerRepository.Object);
@@ -306,7 +306,7 @@ namespace Quizzing.UnitTests
         }
 
         [Fact]
-        public async Task Delete_action_result_method_should_return_NotFound_when_no_quiz_found_for_id()
+        public async Task Delete_action_result_method_should_return_NotFound_when_no_question_found_for_id()
         {
             // Arrange
             var id = 0;
