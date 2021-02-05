@@ -42,7 +42,7 @@ CHANGE POSTGRESS CONECTION STRING
 
 Now run the program; when the application detects that the database does not exist,
 it runs the migrations and create the database that will be built with the respective tables and sample data for quizzes.
-There will be 3 quizes as an example with their own questions and answers and also an admin user, one admin role and one readonly role will be created.
+There will be 3 quizes as an example with their own questions and answers and also.
 
 >>--------------------------
 FEED USERS AND ROLES
