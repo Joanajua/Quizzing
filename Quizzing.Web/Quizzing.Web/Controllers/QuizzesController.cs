@@ -120,7 +120,7 @@ namespace Quizzing.Web.Controllers
         {
             if (id != quiz.QuizId)
             {
-                return NotFound(Constants.ErrorMessages.BadRequest);
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             if (ModelState.IsValid)
@@ -147,6 +147,7 @@ namespace Quizzing.Web.Controllers
 
                 return RedirectToAction(nameof(Edit));
             }
+
             return View();
         }
 
@@ -154,16 +155,16 @@ namespace Quizzing.Web.Controllers
         [Authorize(Policy = "edit")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
-                return NotFound();
+                return BadRequest(Constants.ErrorMessages.BadRequest);
             }
 
             var quiz = await _quizRepository.GetById(id);
                 
             if (quiz == null)
             {
-                return NotFound();
+                return NotFound(Constants.ErrorMessages.NotFound);
             }
 
             return View(quiz);

@@ -139,7 +139,6 @@ namespace Quizzing.UnitTests
                 Title = "Test"
             };
 
-            // Arrange
             var httpContext = new DefaultHttpContext();
 
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -183,12 +182,11 @@ namespace Quizzing.UnitTests
         {
             // Arrange
             var id = 1;
+
             var expectedQuiz = _testData.GetTestQuizzes().FirstOrDefault(q => q.QuizId == id);
-
-            var expectedQuestions = _testData.GetTestQuestions().Where(q=>q.QuizId == id);
-
             _quizRepository.Setup(repo => repo.GetById(id)).ReturnsAsync(expectedQuiz);
 
+            var expectedQuestions = _testData.GetTestQuestions().Where(q => q.QuizId == id);
             _questionRepository.Setup(repo => repo.GetByQuizId(id)).ReturnsAsync(expectedQuestions);
 
             var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object);
@@ -239,6 +237,134 @@ namespace Quizzing.UnitTests
             Assert.Equal(model.StatusCode, notFoundObjectResult.StatusCode);
             Assert.Equal(model.Value, notFoundObjectResult.Value);
             Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Edit_post_action_result_should_redirect_to_action_when_modelState_valid()
+        {
+            var id = 1;
+
+            var quiz = _testData.GetTestQuizzes().FirstOrDefault(q => q.QuizId == id);
+            _quizRepository.Setup(repo => repo.GetById(id)).ReturnsAsync(quiz);
+
+            var httpContext = new DefaultHttpContext();
+
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object)
+            {
+                TempData = tempData
+            };
+
+            // Act
+            var result = await controller.Edit(quiz.QuizId, quiz);
+
+            // Assert
+            Assert.IsType<RedirectToActionResult>(result);
+        }
+
+        [Fact]
+        public async Task Edit_post_action_result_should_return_ViewResult_with_correct_Model_type_when_modelState_not_valid()
+        {
+            // Arrange
+            var quiz = new Quiz
+            {
+                QuizId = 3
+            };
+
+            // Arrange
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object);
+
+            controller.ModelState.AddModelError("Title", "Title is required");
+
+            // Act
+            var result = await controller.Edit(quiz.QuizId, quiz);
+
+            // Assert
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public async Task Edit_post_action_result_method_should_return_BadRequest_when_id_received_different_to_quizId()
+        {
+            // Arrange
+            var id = 0;
+            var quiz = new Quiz
+            {
+                QuizId = 1,
+                Title = "Test"
+            };
+
+            _quizRepository.Setup(repo => repo.GetById(id)).ReturnsAsync(quiz);
+
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object);
+
+            // Act
+            var result = await controller.Edit(id, quiz);
+
+            // Assert
+            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
+            var model = Assert.IsAssignableFrom<BadRequestObjectResult>(badRequestObjectResult);
+            Assert.Equal(model.StatusCode, badRequestObjectResult.StatusCode);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Delete_action_result_method_should_return_BadRequest_when_quiz_id_is_null()
+        {
+            // Arrange
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object);
+
+            // Act
+            var result = await controller.Delete(null);
+
+            // Assert
+            var badRequestObjectResult = Assert.IsType<BadRequestObjectResult>(result);
+            var model = Assert.IsAssignableFrom<BadRequestObjectResult>(badRequestObjectResult);
+            Assert.Equal(model.StatusCode, badRequestObjectResult.StatusCode);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Delete_action_result_method_should_return_NotFound_when_no_quiz_found_for_id()
+        {
+            // Arrange
+            var id = 0;
+            var expectedQuiz = _testData.GetTestQuizzes().FirstOrDefault(q => q.QuizId == id);
+
+            _quizRepository.Setup(repo => repo.GetById(id)).ReturnsAsync(expectedQuiz);
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object);
+
+            // Act
+            var result = await controller.Delete(id);
+
+            // Assert
+            var notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(result);
+            var model = Assert.IsAssignableFrom<NotFoundObjectResult>(notFoundObjectResult);
+            Assert.Equal(model.StatusCode, notFoundObjectResult.StatusCode);
+            Assert.Equal(model.Value, notFoundObjectResult.Value);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task Delete_action_result_method_should_return_ViewResult_with_correct_Model_type()
+        {
+            // Arrange
+            var id = 1;
+
+            var expectedQuiz = _testData.GetTestQuizzes().FirstOrDefault(q => q.QuizId == id);
+            _quizRepository.Setup(repo => repo.GetById(id)).ReturnsAsync(expectedQuiz);
+
+            var controller = new QuizzesController(_quizRepository.Object, _questionRepository.Object);
+
+            // Act
+            var result = await controller.Delete(id);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<Quiz>(viewResult.ViewData.Model);
+            Assert.NotNull(result);
+            Assert.Equal(expectedQuiz.QuizId, model.QuizId);
         }
     }
 }
